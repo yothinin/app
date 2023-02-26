@@ -7,6 +7,7 @@
 
 #include "route.h"
 #include "station.h"
+#include "route_struct.h"
 
 GtkApplication *app;
 static gboolean is_running_route = FALSE;
@@ -15,6 +16,8 @@ static gboolean is_running_station = FALSE;
 static void on_icon_view_item_activated(GtkIconView *icon_view, GtkTreePath *path, gpointer user_data) {
     GtkTreeModel *model;
     GtkTreeIter iter;
+
+    RouteWidgets *mobj = (RouteWidgets*) user_data; // pointer to struct
 
     // Get the model and iter of the selected item
     model = gtk_icon_view_get_model(icon_view);
@@ -25,15 +28,15 @@ static void on_icon_view_item_activated(GtkIconView *icon_view, GtkTreePath *pat
     gtk_tree_model_get(model, &iter, 1, &text, -1);
 
     if (strcmp(text, "เส้นทาง") == 0) {
-      if (!is_running_route) {
+      if (!mobj->is_running_route) {
         GtkWidget *r = do_route (app, &is_running_route);
         gtk_widget_show_all (r);    
       }else{
         g_print ("โปรแกรมข้อมูลเส้นทางเดินรถถูกเปิดไว้แล้ว ไม่สามารถเรียกซ้ำได้\n");
       }
     } else if (strcmp(text, "สถานี") == 0) {
-      if (!is_running_station){
-        GtkWidget *s = do_station (app, &is_running_station);
+      if (!mobj->is_running_station){
+        GtkWidget *s = do_station (app, mobj);
         gtk_widget_show_all (s);
       }else {
         g_print ("โปรแกรมข้อมูลสถานีถูกเปิดไว้แล้ว ไม่สามารถเรียกซ้ำได้\n");
@@ -48,6 +51,9 @@ static void on_window_closed(GtkWidget *widget, gpointer user_data) {
 
 static GtkWidget *do_menu (GtkApplication* app,
           gpointer        user_data) {
+
+  RouteWidgets *mobj = (RouteWidgets*) user_data; // pointer to struct
+
   GtkWidget *window = NULL;
   window = gtk_application_window_new (app);
   // Create a new window
@@ -105,7 +111,7 @@ static GtkWidget *do_menu (GtkApplication* app,
   gtk_icon_view_set_pixbuf_column(GTK_ICON_VIEW(icon_view), 0);
 
   // Connect the signals
-  g_signal_connect(icon_view, "item-activated", G_CALLBACK(on_icon_view_item_activated), NULL);
+  g_signal_connect(icon_view, "item-activated", G_CALLBACK(on_icon_view_item_activated), mobj);
   g_signal_connect(window, "destroy", G_CALLBACK(on_window_closed), NULL);
 
   g_object_unref (route_pixbuf);
@@ -120,7 +126,8 @@ static GtkWidget *do_menu (GtkApplication* app,
 
 static void
 activate (GtkApplication* app, gpointer user_data){
-  GtkWidget *main_window = do_menu (app, NULL);
+  RouteWidgets *mobj = (RouteWidgets*) user_data;
+  GtkWidget *main_window = do_menu (app, mobj);
   gtk_widget_show_all (main_window);
 }
 
@@ -128,8 +135,11 @@ activate (GtkApplication* app, gpointer user_data){
 int
 main (int argc, char **argv){
   int status;
-  app = gtk_application_new ("com.pimpanya", G_APPLICATION_FLAGS_NONE);
-  g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+  RouteWidgets mobj;
+
+  mobj.is_running_route = FALSE;
+  app = gtk_application_new ("com.pimpanya", G_APPLICATION_DEFAULT_FLAGS);
+  g_signal_connect (app, "activate", G_CALLBACK (activate), &mobj);
   status = g_application_run (G_APPLICATION (app), argc, argv);
   g_object_unref (app);
 
