@@ -32,7 +32,9 @@ gboolean on_main_window_delete_event(GtkWidget *widget, GdkEvent *event, gpointe
 
   if (result == GTK_RESPONSE_YES) {
     g_print("Main window close button clicked\nExit: %s\n", mobj->message);
-    mobj->is_running_route = FALSE;
+    //mobj->is_running_ptr = FALSE;
+    *(mobj->is_running_ptr) = FALSE;
+
     //gtk_main_quit();
     return FALSE;
   } else {
@@ -56,7 +58,9 @@ void btnExit_click(GtkWidget *widget, gpointer userdata) {
 
   if (result == GTK_RESPONSE_YES) {
     g_print("btnExit.Clicked\nExit: %s\n", mobj->message);
-    mobj->is_running_route = FALSE;
+    //mobj->is_running_ptr = FALSE;
+    *(mobj->is_running_ptr) = FALSE;
+
     gtk_widget_destroy(mobj->window);
   }
   // If the user clicked "No" or closed the dialog box, do nothing and return to the program.
@@ -65,8 +69,13 @@ void btnExit_click(GtkWidget *widget, gpointer userdata) {
 GtkWidget *
 do_route (GtkApplication *app, gpointer user_data){
     
-  RouteWidgets *mobj = (RouteWidgets*) user_data; // pointer to struct
-  mobj->is_running_route = TRUE;
+  //RouteWidgets *mobj = (RouteWidgets*) user_data; // pointer to struct
+  RouteWidgets *mobj = g_new(RouteWidgets, 1);
+
+  gboolean *is_running_ptr = (gboolean *) user_data;
+  *is_running_ptr = TRUE;
+  
+  mobj->is_running_ptr = is_running_ptr;
   mobj->message = "โปรแกรมเส้นทางเดินรถ";
   mobj->builder = gtk_builder_new_from_file("glade/tms_route.glade");
   
