@@ -147,12 +147,16 @@ static GtkWidget *do_menu (GtkApplication* app,
   g_signal_connect(icon_view, "item-activated", G_CALLBACK(on_icon_view_item_activated), NULL);
   g_signal_connect(window, "destroy", G_CALLBACK(on_window_closed), NULL);
 
+  g_object_unref (province_pixbuf);
+  g_object_unref (employee_pixbuf);
+  g_object_unref (user_pixbuf);
   g_object_unref (route_pixbuf);
   g_object_unref (station_pixbuf);
   g_object_unref (bus_pixbuf);
   g_object_unref (schedule_pixbuf);
   g_object_unref (ticket_pixbuf);
   g_object_unref (printer_pixbuf);
+  g_object_unref (tool_pixbuf);
 
   return (window);
 }
