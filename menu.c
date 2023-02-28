@@ -5,8 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "route.h"
-#include "station.h"
+#include "menu.h"
 //#include "route_struct.h"
 
 GtkApplication *app;
@@ -32,22 +31,31 @@ static void on_icon_view_item_activated(GtkIconView *icon_view, GtkTreePath *pat
     // Get the text of the selected item
     gchar *text;
     gtk_tree_model_get(model, &iter, 1, &text, -1);
+    
+    GtkWidget *running = NULL;
+    if (strcmp (text, "จังหวัด") == 0){
+      if (!is_running_province)
+        running = do_province (app, &is_running_province);
+      else
+        g_print ("โปรแกรมข้อมูลจังหวัดถูกเปิดไว้แล้ว ไม่สามารถเรียกซ้ำได้\n");
+    }
 
     if (strcmp(text, "เส้นทาง") == 0) {
       if (!is_running_route) {
-        GtkWidget *r = do_route (app, &is_running_route);
-        gtk_widget_show_all (r);    
+        running = do_route (app, &is_running_route);
       }else{
         g_print ("โปรแกรมข้อมูลเส้นทางเดินรถถูกเปิดไว้แล้ว ไม่สามารถเรียกซ้ำได้\n");
       }
     } else if (strcmp(text, "สถานี") == 0) {
       if (!is_running_station){
-        GtkWidget *s = do_station (app, &is_running_station);
-        gtk_widget_show_all (s);
+        running = do_station (app, &is_running_station);
       }else {
         g_print ("โปรแกรมข้อมูลสถานีถูกเปิดไว้แล้ว ไม่สามารถเรียกซ้ำได้\n");
       }
     }
+    if (running != NULL)
+      gtk_widget_show_all (running);
+      
     g_free(text);
 }
 
