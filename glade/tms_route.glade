@@ -55,7 +55,7 @@
     <property name="border-width">15</property>
     <property name="title" translatable="yes">เส้นทางเดินรถ</property>
     <property name="window-position">center</property>
-    <property name="icon">icons/icons8-bus-48.png</property>
+    <property name="icon">../icons/motorway.png</property>
     <property name="gravity">center</property>
     <signal name="destroy" handler="gtk_main_quit" swapped="no"/>
     <child>
