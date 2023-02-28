@@ -78,7 +78,10 @@ static GtkWidget *do_menu (GtkApplication* app,
   //GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title(GTK_WINDOW(window), "TMS 1.0");
   gtk_container_set_border_width(GTK_CONTAINER(window), 10);
-  gtk_window_set_default_size (GTK_WINDOW (window), 480, 640);
+  gtk_window_set_default_size (GTK_WINDOW (window), 460, 600);
+  GdkGeometry hints = { .min_width = 460, .min_height = 600 };
+  gtk_window_set_geometry_hints(GTK_WINDOW(window), NULL, &hints, GDK_HINT_MIN_SIZE);
+
 
   // Create three pixbufs from image files
   GdkPixbuf *province_pixbuf = gdk_pixbuf_new_from_file("icons/province.png", NULL);
