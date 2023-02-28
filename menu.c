@@ -10,11 +10,12 @@
 //#include "route_struct.h"
 
 GtkApplication *app;
-gboolean is_running_route = FALSE;
-gboolean is_running_station = FALSE;
 GtkWidget *vUserBox;
 GtkWidget *vUserInfo;
 GtkWidget *icon_view;
+gboolean is_running_route = FALSE;
+gboolean is_running_station = FALSE;
+gboolean is_running_province = FALSE;
 
 static void on_icon_view_item_activated(GtkIconView *icon_view, GtkTreePath *path, gpointer user_data) {
     GtkTreeModel *model;
@@ -77,20 +78,35 @@ static GtkWidget *do_menu (GtkApplication* app,
   //GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title(GTK_WINDOW(window), "TMS 1.0");
   gtk_container_set_border_width(GTK_CONTAINER(window), 10);
-  gtk_window_set_default_size (GTK_WINDOW (window), 180, 480);
+  gtk_window_set_default_size (GTK_WINDOW (window), 480, 640);
 
   // Create three pixbufs from image files
+  GdkPixbuf *province_pixbuf = gdk_pixbuf_new_from_file("icons/province.png", NULL);
+  GdkPixbuf *employee_pixbuf = gdk_pixbuf_new_from_file("icons/employee.png", NULL);
+  GdkPixbuf *user_pixbuf = gdk_pixbuf_new_from_file("icons/user.png", NULL);
   GdkPixbuf *route_pixbuf = gdk_pixbuf_new_from_file("icons/route.png", NULL);
   GdkPixbuf *station_pixbuf = gdk_pixbuf_new_from_file("icons/station.png", NULL);
   GdkPixbuf *bus_pixbuf = gdk_pixbuf_new_from_file("icons/bus.png", NULL);
   GdkPixbuf *schedule_pixbuf = gdk_pixbuf_new_from_file("icons/schedule.png", NULL);
   GdkPixbuf *ticket_pixbuf = gdk_pixbuf_new_from_file("icons/ticket.png", NULL);
   GdkPixbuf *printer_pixbuf = gdk_pixbuf_new_from_file("icons/printer.png", NULL);
+  GdkPixbuf *tool_pixbuf = gdk_pixbuf_new_from_file("icons/tool.png", NULL);
 
   // Create a tree store to hold the icon data
   GtkTreeStore *store = gtk_tree_store_new(2, GDK_TYPE_PIXBUF, G_TYPE_STRING);
   GtkTreeIter iter;
 
+  // Add the Province icon
+  gtk_tree_store_append(store, &iter, NULL);
+  gtk_tree_store_set(store, &iter, 0, province_pixbuf, 1, "จังหวัด", -1);
+
+  // Add the Employee icon
+  gtk_tree_store_append(store, &iter, NULL);
+  gtk_tree_store_set(store, &iter, 0, employee_pixbuf, 1, "พนักงาน", -1);
+  
+  // Add the User icon
+  gtk_tree_store_append(store, &iter, NULL);
+  gtk_tree_store_set(store, &iter, 0, user_pixbuf, 1, "ผู้ใช้งาน", -1);
   // Add the Route icon
   gtk_tree_store_append(store, &iter, NULL);
   gtk_tree_store_set(store, &iter, 0, route_pixbuf, 1, "เส้นทาง", -1);
@@ -114,6 +130,10 @@ static GtkWidget *do_menu (GtkApplication* app,
   // Add the Schedule icon
   gtk_tree_store_append(store, &iter, NULL);
   gtk_tree_store_set(store, &iter, 0, printer_pixbuf, 1, "รายงาน", -1);
+
+  // Add the Tool icon
+  gtk_tree_store_append(store, &iter, NULL);
+  gtk_tree_store_set(store, &iter, 0, tool_pixbuf, 1, "เส้นทาง", -1);
 
   // Create a new icon view widget
   icon_view = gtk_icon_view_new();
@@ -148,7 +168,9 @@ static GtkWidget *do_menu (GtkApplication* app,
   
   gtk_box_pack_start (GTK_BOX (vbox), vUserBox, FALSE, FALSE, 0);
   
-  gtk_box_pack_start (GTK_BOX (vbox), icon_view, FALSE, FALSE, 0);
+  GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
+  gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);  
+  gtk_container_add(GTK_CONTAINER(scrolled), icon_view);
   
   vUserInfo = gtk_box_new (GTK_ORIENTATION_VERTICAL, 2);
   gtk_box_pack_end (GTK_BOX (vbox), vUserInfo, FALSE, FALSE, 0);
@@ -171,12 +193,16 @@ static GtkWidget *do_menu (GtkApplication* app,
   g_signal_connect(icon_view, "item-activated", G_CALLBACK(on_icon_view_item_activated), NULL);
   g_signal_connect(window, "destroy", G_CALLBACK(on_window_closed), NULL);
 
+  g_object_unref (province_pixbuf);
+  g_object_unref (employee_pixbuf);
+  g_object_unref (user_pixbuf);
   g_object_unref (route_pixbuf);
   g_object_unref (station_pixbuf);
   g_object_unref (bus_pixbuf);
   g_object_unref (schedule_pixbuf);
   g_object_unref (ticket_pixbuf);
   g_object_unref (printer_pixbuf);
+  g_object_unref (tool_pixbuf);
 
   return (window);
 }
