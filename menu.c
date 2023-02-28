@@ -112,7 +112,7 @@ static GtkWidget *do_menu (GtkApplication* app,
 
 
   // Create three pixbufs from image files
-  GdkPixbuf *province_pixbuf = gdk_pixbuf_new_from_file("icons/province.png", NULL);
+  GdkPixbuf *province_pixbuf = gdk_pixbuf_new_from_file("icons/thailand.ico", NULL);
   GdkPixbuf *employee_pixbuf = gdk_pixbuf_new_from_file("icons/employee.png", NULL);
   GdkPixbuf *user_pixbuf = gdk_pixbuf_new_from_file("icons/user.png", NULL);
   GdkPixbuf *route_pixbuf = gdk_pixbuf_new_from_file("icons/motorway.png", NULL);
