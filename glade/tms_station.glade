@@ -17,6 +17,7 @@
     <property name="border-width">15</property>
     <property name="title" translatable="yes">ตารางสถานที่</property>
     <property name="window-position">center-always</property>
+    <property name="icon">../icons/station.png</property>
     <property name="gravity">center</property>
     <child>
       <object class="GtkBox" id="mainBox">

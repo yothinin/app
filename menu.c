@@ -82,6 +82,17 @@ static GtkWidget *do_menu (GtkApplication* app,
 
   GtkWidget *window = NULL;
   window = gtk_application_window_new (app);
+
+  GError *error = NULL;
+  GdkPixbuf *icon = gdk_pixbuf_new_from_file("icons/transport.png", &error);
+  if (error == NULL){
+    gtk_window_set_icon (GTK_WINDOW (window), icon);
+    g_object_unref (icon);
+  }else {
+    g_warning("Unable to load icon: %s", error->message);
+    g_error_free(error);
+  }
+  
   // Create a new window
   //GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title(GTK_WINDOW(window), "TMS 1.0");
@@ -95,7 +106,7 @@ static GtkWidget *do_menu (GtkApplication* app,
   GdkPixbuf *province_pixbuf = gdk_pixbuf_new_from_file("icons/province.png", NULL);
   GdkPixbuf *employee_pixbuf = gdk_pixbuf_new_from_file("icons/employee.png", NULL);
   GdkPixbuf *user_pixbuf = gdk_pixbuf_new_from_file("icons/user.png", NULL);
-  GdkPixbuf *route_pixbuf = gdk_pixbuf_new_from_file("icons/route.png", NULL);
+  GdkPixbuf *route_pixbuf = gdk_pixbuf_new_from_file("icons/motorway.png", NULL);
   GdkPixbuf *station_pixbuf = gdk_pixbuf_new_from_file("icons/station.png", NULL);
   GdkPixbuf *bus_pixbuf = gdk_pixbuf_new_from_file("icons/bus.png", NULL);
   GdkPixbuf *schedule_pixbuf = gdk_pixbuf_new_from_file("icons/schedule.png", NULL);
