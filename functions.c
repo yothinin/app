@@ -156,14 +156,14 @@ void change_keyb (gchar *new_group){
 // return pointer to GtkTreeIter, use *
 // ex_condition, we stop looping when result is -1 = before, 0 = equal, 1 = after
 GtkTreeIter *get_iter (const gchar* str, gint col, int ext_condition, gpointer userdata){
-  MyObjects *mobj = (MyObjects*) userdata;
-  gint number_of_rows = gtk_tree_model_iter_n_children(GTK_TREE_MODEL(mobj->liststore), NULL);
-  mobj->model = gtk_tree_view_get_model (GTK_TREE_VIEW (mobj->treeview));
-  if (gtk_tree_model_get_iter_first (mobj->model, &mobj->iter)){
+  StationWidgets *stationObj = (StationWidgets*) userdata;
+  gint number_of_rows = gtk_tree_model_iter_n_children(GTK_TREE_MODEL(stationObj->liststore), NULL);
+  stationObj->model = gtk_tree_view_get_model (GTK_TREE_VIEW (stationObj->treeview));
+  if (gtk_tree_model_get_iter_first (stationObj->model, &stationObj->iter)){
     gchar *staCode;
     gint count=1;
     do {
-      gtk_tree_model_get (mobj->model, &mobj->iter, col, &staCode, -1);
+      gtk_tree_model_get (stationObj->model, &stationObj->iter, col, &staCode, -1);
 
       // sta after staCode, exit and insert before staCode.
       if (ext_condition == -1 && g_utf8_collate (str, staCode) < 0) break;
@@ -174,7 +174,7 @@ GtkTreeIter *get_iter (const gchar* str, gint col, int ext_condition, gpointer u
 
       count++;
       g_free (staCode); // addnew
-    } while (gtk_tree_model_iter_next (mobj->model, &mobj->iter));
+    } while (gtk_tree_model_iter_next (stationObj->model, &stationObj->iter));
 
     if (count > number_of_rows){
       g_print ("EOF, data not found (ALL=%d)\n", number_of_rows);
@@ -185,7 +185,7 @@ GtkTreeIter *get_iter (const gchar* str, gint col, int ext_condition, gpointer u
     //g_free (staCode); //move to do block
   }
   
-  return (&mobj->iter); // must use & before iter
+  return (&stationObj->iter); // must use & before iter
 }
 
 void display_warning_message(const gchar *message) {

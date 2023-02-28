@@ -19,68 +19,68 @@
 #include "station_struct.h"
 
 void stationExit_click (GtkWidget *widget, gpointer userdata){
-  MyObjects *mobj = (MyObjects*) userdata;
-  g_print ("exit: %s\n", mobj->message);
+  StationWidgets *stationObj = (StationWidgets*) userdata;
+  g_print ("exit: %s\n", stationObj->message);
   change_keyb ("us");
-  gtk_widget_set_sensitive (mobj->btnExit, FALSE);
+  gtk_widget_set_sensitive (stationObj->btnExit, FALSE);
   //gtk_main_quit();
-  *(mobj->is_running_ptr) = FALSE;
-  gtk_widget_destroy (mobj->window);
+  *(stationObj->is_running_ptr) = FALSE;
+  gtk_widget_destroy (stationObj->window);
 }
 
 GtkWidget *
 do_station (GtkApplication *app, gpointer user_data){
-  //MyObjects *mobj = (MyObjects*) user_data; // pointer to struct
-  MyObjects *mobj = g_new(MyObjects, 1);
+  //StationWidgets *stationObj = (StationWidgets*) user_data; // pointer to struct
+  StationWidgets *stationObj = g_new(StationWidgets, 1);
 
   gboolean *is_running_ptr = (gboolean *) user_data;
   *is_running_ptr = TRUE;
   
-  mobj->is_running_ptr = is_running_ptr;
-  mobj->message = "โปรแกรมข้อมูลสถานี";
-  mobj->builder = gtk_builder_new_from_file("glade/tms_station.glade");
+  stationObj->is_running_ptr = is_running_ptr;
+  stationObj->message = "โปรแกรมข้อมูลสถานี";
+  stationObj->builder = gtk_builder_new_from_file("glade/tms_station.glade");
   //gtk_builder_connect_signals(builder, NULL);
 
-  mobj->window = (GtkWidget*)gtk_builder_get_object(mobj->builder, "window");
-  gtk_window_set_position (GTK_WINDOW(mobj->window), GTK_ALIGN_CENTER);
+  stationObj->window = (GtkWidget*)gtk_builder_get_object(stationObj->builder, "window");
+  gtk_window_set_position (GTK_WINDOW(stationObj->window), GTK_ALIGN_CENTER);
 
-  mobj->edit = 0;
-  g_print ("%s\n", mobj->message);
+  stationObj->edit = 0;
+  g_print ("%s\n", stationObj->message);
 
-  mobj->treeview = (GtkWidget*) gtk_builder_get_object (mobj->builder, "treeView");
-  mobj->entStaCode = (GtkWidget*) gtk_builder_get_object (mobj->builder, "entStaCode");
-  mobj->entStaName = (GtkWidget*) gtk_builder_get_object (mobj->builder, "entStaName");
-  mobj->btnSave = (GtkWidget*) gtk_builder_get_object (mobj->builder, "btnSave");
-  mobj->btnDelete = (GtkWidget*) gtk_builder_get_object (mobj->builder, "btnDelete");
-  mobj->btnExit = (GtkWidget*) gtk_builder_get_object (mobj->builder, "btnExit");
-  mobj->btnNew = (GtkWidget*) gtk_builder_get_object (mobj->builder, "btnNew");
-  mobj->liststore = (GtkListStore*) gtk_builder_get_object (mobj->builder, "mainStore");
-  mobj->btnDemo = (GtkWidget*) gtk_builder_get_object (mobj->builder, "btnDemo");
+  stationObj->treeview = (GtkWidget*) gtk_builder_get_object (stationObj->builder, "treeView");
+  stationObj->entStaCode = (GtkWidget*) gtk_builder_get_object (stationObj->builder, "entStaCode");
+  stationObj->entStaName = (GtkWidget*) gtk_builder_get_object (stationObj->builder, "entStaName");
+  stationObj->btnSave = (GtkWidget*) gtk_builder_get_object (stationObj->builder, "btnSave");
+  stationObj->btnDelete = (GtkWidget*) gtk_builder_get_object (stationObj->builder, "btnDelete");
+  stationObj->btnExit = (GtkWidget*) gtk_builder_get_object (stationObj->builder, "btnExit");
+  stationObj->btnNew = (GtkWidget*) gtk_builder_get_object (stationObj->builder, "btnNew");
+  stationObj->liststore = (GtkListStore*) gtk_builder_get_object (stationObj->builder, "mainStore");
+  stationObj->btnDemo = (GtkWidget*) gtk_builder_get_object (stationObj->builder, "btnDemo");
   
-  insertDataToListStore(mobj); // Insert data to GtkListStore at the first run.
+  insertDataToListStore(stationObj); // Insert data to GtkListStore at the first run.
 
-  // don't use & before mobj.
-  g_signal_connect (mobj->btnNew, "clicked", G_CALLBACK (stationNew_click), mobj);
-  g_signal_connect (mobj->entStaCode, "focus-in-event", G_CALLBACK (entStaCode_focus), mobj);
-  g_signal_connect (mobj->entStaName, "focus-in-event", G_CALLBACK (entStaName_focus), mobj);
-  g_signal_connect (mobj->entStaCode, "key-release-event", G_CALLBACK (entStaCode_release), mobj);
-  g_signal_connect (mobj->entStaName, "key-release-event", G_CALLBACK (entStaName_release), mobj);
-  g_signal_connect (mobj->btnSave, "clicked", G_CALLBACK (stationSave_click), mobj);
-  g_signal_connect (mobj->btnDelete, "clicked", G_CALLBACK (stationDelete_click), mobj);
-  g_signal_connect (mobj->treeview, "cursor-changed", G_CALLBACK (station_row_change), mobj);
-  g_signal_connect (mobj->btnExit, "clicked", G_CALLBACK (stationExit_click), mobj);
-  g_signal_connect (mobj->window, "destroy", G_CALLBACK (stationExit_click), mobj);
-  g_signal_connect (mobj->btnDemo, "clicked", G_CALLBACK (btnDemo_click), mobj);
+  // don't use & before stationObj.
+  g_signal_connect (stationObj->btnNew, "clicked", G_CALLBACK (stationNew_click), stationObj);
+  g_signal_connect (stationObj->entStaCode, "focus-in-event", G_CALLBACK (entStaCode_focus), stationObj);
+  g_signal_connect (stationObj->entStaName, "focus-in-event", G_CALLBACK (entStaName_focus), stationObj);
+  g_signal_connect (stationObj->entStaCode, "key-release-event", G_CALLBACK (entStaCode_release), stationObj);
+  g_signal_connect (stationObj->entStaName, "key-release-event", G_CALLBACK (entStaName_release), stationObj);
+  g_signal_connect (stationObj->btnSave, "clicked", G_CALLBACK (stationSave_click), stationObj);
+  g_signal_connect (stationObj->btnDelete, "clicked", G_CALLBACK (stationDelete_click), stationObj);
+  g_signal_connect (stationObj->treeview, "cursor-changed", G_CALLBACK (station_row_change), stationObj);
+  g_signal_connect (stationObj->btnExit, "clicked", G_CALLBACK (stationExit_click), stationObj);
+  g_signal_connect (stationObj->window, "destroy", G_CALLBACK (stationExit_click), stationObj);
+  g_signal_connect (stationObj->btnDemo, "clicked", G_CALLBACK (btnDemo_click), stationObj);
   
-  gtk_widget_set_sensitive (mobj->entStaCode, FALSE);
-  gtk_widget_set_sensitive (mobj->entStaName, FALSE);
-  gtk_widget_set_sensitive (mobj->btnSave, FALSE);
-  gtk_widget_set_sensitive (mobj->btnDelete, FALSE);
+  gtk_widget_set_sensitive (stationObj->entStaCode, FALSE);
+  gtk_widget_set_sensitive (stationObj->entStaName, FALSE);
+  gtk_widget_set_sensitive (stationObj->btnSave, FALSE);
+  gtk_widget_set_sensitive (stationObj->btnDelete, FALSE);
 
-  gtk_widget_grab_focus (mobj->btnNew);
+  gtk_widget_grab_focus (stationObj->btnNew);
   //gtk_widget_show_all (window);
   
-  g_object_unref (G_OBJECT(mobj->builder));
+  g_object_unref (G_OBJECT(stationObj->builder));
   
-  return (mobj->window);
+  return (stationObj->window);
 }

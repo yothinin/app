@@ -14,8 +14,8 @@
 #endif //GTK_GTK_H
 
 #include "functions.h"
-//#include "province_mysql_fnct.h"
-//#include "province_widget_fnct.h"
+#include "province_mysql_fnct.h"
+#include "province_widget_fnct.h"
 #include "province_struct.h"
 
 void prvExit_click (GtkWidget *widget, gpointer userdata){
@@ -55,7 +55,8 @@ do_province (GtkApplication *app, gpointer user_data){
   prvObj->btnNew = (GtkWidget*) gtk_builder_get_object (prvObj->builder, "btnNew");
   prvObj->treeStore = (GtkTreeStore*) gtk_builder_get_object (prvObj->builder, "treeStore");
   
-  //insertDataToListStore(prvObj); // Insert data to GtkListStore at the first run.
+  insertProvinceToListStore (prvObj);
+  //insertProvinceToListStore (prvObj); // Insert data to GtkListStore at the first run.
 
   // don't use & before prvObj.
   //g_signal_connect (prvObj->btnNew, "clicked", G_CALLBACK (stationNew_click), prvObj);
