@@ -1,7 +1,22 @@
 CC=gcc
 CFLAGS=-g -Wall
 LIBS=`pkg-config --libs --cflags gtk+-3.0` -lmariadbclient -I/usr/include/glib-2.0 -lm -lX11 -lxkbfile -rdynamic
-MENU_SOURCES=menu.c province.c bustype.c route.c station.c functions.c mysql_fnct.c province_widget_fnct.c province_mysql_fnct.c bustype_mysql_fnct.c bustype_widget_fnct.c route_widget_fnct.c route_mysql_fnct.c station_widget_fnct.c station_mysql_fnct.c
+MENU_SOURCES=menu.c \
+              province.c \
+              bustype.c \
+              route.c \
+              station.c \
+              functions.c \
+              mysql_fnct.c \
+              province_widget_fnct.c \
+              province_mysql_fnct.c \
+              bustype_mysql_fnct.c \
+              bustype_widget_fnct.c \
+              route_widget_fnct.c \
+              route_mysql_fnct.c \
+              station_widget_fnct.c \
+              station_mysql_fnct.c
+
 MENU_OBJECTS=$(MENU_SOURCES:.c=.o)
 MENU_EXECUTABLE=menu
 
