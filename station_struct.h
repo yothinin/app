@@ -19,7 +19,7 @@ typedef struct {
   gchar *staName;
 } Station;
 
-typedef struct _MyObjects{
+typedef struct {
   GtkBuilder *builder;
   GtkWidget *window;
   GtkWidget *treeview ;
@@ -37,6 +37,6 @@ typedef struct _MyObjects{
   gint edit;
   gchar *message;
   gboolean *is_running_ptr;
-}MyObjects;
+} StationWidgets;
 
 #endif // STATION_STRUCT_H
