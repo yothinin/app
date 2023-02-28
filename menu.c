@@ -15,6 +15,7 @@ GtkWidget *icon_view;
 gboolean is_running_route = FALSE;
 gboolean is_running_station = FALSE;
 gboolean is_running_province = FALSE;
+gboolean is_running_bustype = FALSE;
 
 static void on_icon_view_item_activated(GtkIconView *icon_view, GtkTreePath *path, gpointer user_data) {
     GtkTreeModel *model;
@@ -40,7 +41,15 @@ static void on_icon_view_item_activated(GtkIconView *icon_view, GtkTreePath *pat
         g_print ("โปรแกรมข้อมูลจังหวัดถูกเปิดไว้แล้ว ไม่สามารถเรียกซ้ำได้\n");
     }
 
-    if (strcmp(text, "เส้นทาง") == 0) {
+    if (strcmp (text, "ประเภทรถ") == 0) {
+      if (!is_running_bustype)
+        running = do_bustype (app, &is_running_bustype);
+      else
+        g_print ("โปรแกรมข้อมูลประเภทรถถูกเปิดไว้แล้ว ไม่สามารถเรียกซ้ำได้\n");
+        
+    }
+
+    if (strcmp (text, "เส้นทาง") == 0) {
       if (!is_running_route) {
         running = do_route (app, &is_running_route);
       }else{

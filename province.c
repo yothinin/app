@@ -45,7 +45,7 @@ do_province (GtkApplication *app, gpointer user_data){
 
   prvObj->edit = 0;
   g_print ("%s\n", prvObj->message);
-
+  
   prvObj->treeView = (GtkWidget*) gtk_builder_get_object (prvObj->builder, "treeView");
   prvObj->entPrvCode = (GtkWidget*) gtk_builder_get_object (prvObj->builder, "entPrvCode");
   prvObj->entPrvName = (GtkWidget*) gtk_builder_get_object (prvObj->builder, "entPrvName");
@@ -59,14 +59,14 @@ do_province (GtkApplication *app, gpointer user_data){
   //insertProvinceToListStore (prvObj); // Insert data to GtkListStore at the first run.
 
   // don't use & before prvObj.
-  //g_signal_connect (prvObj->btnNew, "clicked", G_CALLBACK (stationNew_click), prvObj);
-  //g_signal_connect (prvObj->entStaCode, "focus-in-event", G_CALLBACK (entStaCode_focus), prvObj);
-  //g_signal_connect (prvObj->entStaName, "focus-in-event", G_CALLBACK (entStaName_focus), prvObj);
-  //g_signal_connect (prvObj->entStaCode, "key-release-event", G_CALLBACK (entStaCode_release), prvObj);
-  //g_signal_connect (prvObj->entStaName, "key-release-event", G_CALLBACK (entStaName_release), prvObj);
-  //g_signal_connect (prvObj->btnSave, "clicked", G_CALLBACK (stationSave_click), prvObj);
-  //g_signal_connect (prvObj->btnDelete, "clicked", G_CALLBACK (stationDelete_click), prvObj);
-  //g_signal_connect (prvObj->treeview, "cursor-changed", G_CALLBACK (station_row_change), prvObj);
+  g_signal_connect (prvObj->btnNew, "clicked", G_CALLBACK (prvNew_click), prvObj);
+  g_signal_connect (prvObj->entPrvCode, "focus-in-event", G_CALLBACK (entPrvCode_focus), prvObj);
+  g_signal_connect (prvObj->entPrvName, "focus-in-event", G_CALLBACK (entPrvName_focus), prvObj);
+  g_signal_connect (prvObj->entPrvCode, "key-release-event", G_CALLBACK (entPrvCode_release), prvObj);
+  g_signal_connect (prvObj->entPrvName, "key-release-event", G_CALLBACK (entPrvName_release), prvObj);
+  g_signal_connect (prvObj->btnSave, "clicked", G_CALLBACK (prvSave_click), prvObj);
+  g_signal_connect (prvObj->btnDelete, "clicked", G_CALLBACK (prvDelete_click), prvObj);
+  g_signal_connect (prvObj->treeView, "cursor-changed", G_CALLBACK (prv_row_change), prvObj);
   g_signal_connect (prvObj->btnExit, "clicked", G_CALLBACK (prvExit_click), prvObj);
   g_signal_connect (prvObj->window, "destroy", G_CALLBACK (prvExit_click), prvObj);
   
