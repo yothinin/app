@@ -16,8 +16,8 @@ void stationNew_click (GtkWidget *widget, gpointer userdata);
 void stationSave_click (GtkWidget *widget, gpointer user_data);
 void stationDelete_click (GtkWidget *widget, gpointer user_data);
 void station_row_change (GtkWidget *treeView, gpointer userdata);
-void update_tree_view(MyObjects *mobj, Station station, gboolean result);
-void update_list_store(MyObjects *mobj, Station station, gboolean result);
-void insertDataToListStore(MyObjects *mobj);
+void update_tree_view(StationWidgets *stationObj, Station station, gboolean result);
+void update_list_store(StationWidgets *stationObj, Station station, gboolean result);
+void insertDataToListStore(StationWidgets *stationObj);
 
 #endif // STATION_WIDGET_FNCT_H
