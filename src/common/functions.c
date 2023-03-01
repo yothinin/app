@@ -16,11 +16,90 @@
 #include <string.h>
 #include <time.h>
 #include <stdio.h>
+#include <sys/stat.h>
 
-//#include "station_struct.h"
 #include "../station/station_struct.h"
 #include "../route/route_struct.h"
 
+#define MAX_MESSAGE_LEN 255
+
+char *log_message(const char *log_type, const void *data, size_t num_fields) {
+    char *log_msg = malloc(MAX_MESSAGE_LEN);
+    if (log_msg == NULL) {
+        fprintf(stderr, "Failed to allocate memory for log message\n");
+        return NULL;
+    }
+
+    // Merge message data into log message
+    int offset = 0;
+    int len = snprintf(log_msg + offset, MAX_MESSAGE_LEN - offset, "%s: ", log_type);
+    if (len >= MAX_MESSAGE_LEN - offset) {
+        fprintf(stderr, "Log message exceeded maximum length\n");
+        free(log_msg);
+        return NULL;
+    }
+    offset += len;
+
+    // Format log message with field values
+    for (size_t i = 0; i < num_fields; i++) {
+        const char *field_val = *(const char **)((const char *)data + i * sizeof(char *));
+        if (field_val != NULL) {
+            len = snprintf(log_msg + offset, MAX_MESSAGE_LEN - offset, "%s", field_val);
+            if (len >= MAX_MESSAGE_LEN - offset) {
+                fprintf(stderr, "Log message exceeded maximum length\n");
+                free(log_msg);
+                return NULL;
+            }
+            offset += len;
+
+            if (i < num_fields - 1) {
+                len = snprintf(log_msg + offset, MAX_MESSAGE_LEN - offset, ", ");
+                if (len >= MAX_MESSAGE_LEN - offset) {
+                    fprintf(stderr, "Log message exceeded maximum length\n");
+                    free(log_msg);
+                    return NULL;
+                }
+                offset += len;
+            }
+        }
+    }
+
+    return log_msg;
+}
+
+void log_activity(const char *module, const char *message) {
+    time_t t = time(NULL);
+    struct tm *tm = localtime(&t);
+    char path[256], filename[32], timestamp[32];
+    FILE *file;
+
+    // Create the log file path using the current date and the bus type
+    strftime(timestamp, sizeof(timestamp), "%Y%m%d", tm);
+    snprintf(filename, sizeof(filename), "%s.log", module);
+    snprintf(path, sizeof(path), "log/%s/%s", timestamp, filename);
+
+    // Create the log directory if it doesn't exist
+    char dirpath[256];
+    snprintf(dirpath, sizeof(dirpath), "log/%s", timestamp);
+    if (mkdir(dirpath, 0777) != 0 && errno != EEXIST) {
+        fprintf(stderr, "Failed to create log directory '%s': %s\n", dirpath, strerror(errno));
+        return;
+    }
+
+    // Open the log file for appending
+    file = fopen(path, "a");
+    if (file == NULL) {
+        fprintf(stderr, "Failed to open log file '%s' for appending\n", path);
+        return;
+    }
+
+    // Write the log message to the file, along with the current time
+    strftime(timestamp, sizeof(timestamp), "[%Y-%m-%d %H:%M:%S]", tm);
+    fprintf(file, "%s %s\n", timestamp, message);
+
+    // Close the log file
+    fclose(file);
+}
 
 char *dateFormat(char *lang, time_t date, char *type) {
     char *result = (char *) malloc(100 * sizeof(char));

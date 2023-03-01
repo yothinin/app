@@ -93,7 +93,10 @@ static GtkWidget *do_menu (GtkApplication* app,
   window = gtk_application_window_new (app);
 
   GError *error = NULL;
-  GdkPixbuf *icon = gdk_pixbuf_new_from_file("../icons/transport.png", &error);
+  char *transport_path = g_build_filename (g_path_get_dirname (__FILE__), "..", "..", "icons", "transport.png", NULL);
+  GdkPixbuf *icon = gdk_pixbuf_new_from_file(transport_path, &error);
+  g_free (transport_path);
+  
   if (error == NULL){
     gtk_window_set_icon (GTK_WINDOW (window), icon);
     g_object_unref (icon);
@@ -114,22 +117,39 @@ static GtkWidget *do_menu (GtkApplication* app,
   // Create three pixbufs from image files
   //GdkPixbuf *province_pixbuf = gdk_pixbuf_new_from_file("../../icons/thailand.ico", NULL);
   
-  GdkPixbuf *province_pixbuf;
-  char *icon_path;
-  icon_path = g_build_filename(g_path_get_dirname(__FILE__), "..", "..", "icons", "thailand.ico", NULL);
-  province_pixbuf = gdk_pixbuf_new_from_file(icon_path, NULL);
-  g_free(icon_path);
+  char *province_path, *employee_path, *user_path, *route_path, *station_path, *bustype_path, *schedule_path, *ticket_path, *printer_path, *tool_path;
+  province_path = g_build_filename(g_path_get_dirname(__FILE__), "..", "..", "icons", "thailand.ico", NULL);
+  employee_path = g_build_filename(g_path_get_dirname(__FILE__), "..", "..", "icons", "employee.png", NULL);
+  user_path = g_build_filename(g_path_get_dirname(__FILE__), "..", "..", "icons", "user.png", NULL);
+  route_path = g_build_filename(g_path_get_dirname(__FILE__), "..", "..", "icons", "motorway.png", NULL);
+  station_path = g_build_filename(g_path_get_dirname(__FILE__), "..", "..", "icons", "station.png", NULL);
+  bustype_path = g_build_filename(g_path_get_dirname(__FILE__), "..", "..", "icons", "bus.png", NULL);
+  schedule_path = g_build_filename(g_path_get_dirname(__FILE__), "..", "..", "icons", "schedule.png", NULL);
+  ticket_path = g_build_filename(g_path_get_dirname(__FILE__), "..", "..", "icons", "ticket.png", NULL);
+  printer_path = g_build_filename(g_path_get_dirname(__FILE__), "..", "..", "icons", "printer.png", NULL);
+  tool_path = g_build_filename(g_path_get_dirname(__FILE__), "..", "..", "icons", "tool.png", NULL);
   
-  GdkPixbuf *employee_pixbuf = gdk_pixbuf_new_from_file("../../icons/employee.png", NULL);
-  GdkPixbuf *user_pixbuf = gdk_pixbuf_new_from_file("../../icons/user.png", NULL);
-  GdkPixbuf *route_pixbuf = gdk_pixbuf_new_from_file("../../icons/motorway.png", NULL);
-  GdkPixbuf *station_pixbuf = gdk_pixbuf_new_from_file("../../icons/station.png", NULL);
-  GdkPixbuf *bus_pixbuf = gdk_pixbuf_new_from_file("../../icons/bus.png", NULL);
-  GdkPixbuf *schedule_pixbuf = gdk_pixbuf_new_from_file("../../icons/schedule.png", NULL);
-  GdkPixbuf *ticket_pixbuf = gdk_pixbuf_new_from_file("../../icons/ticket.png", NULL);
-  GdkPixbuf *printer_pixbuf = gdk_pixbuf_new_from_file("../../icons/printer.png", NULL);
-  GdkPixbuf *tool_pixbuf = gdk_pixbuf_new_from_file("../../icons/tool.png", NULL);
+  GdkPixbuf *province_pixbuf = gdk_pixbuf_new_from_file(province_path, NULL);
+  GdkPixbuf *employee_pixbuf = gdk_pixbuf_new_from_file(employee_path, NULL);
+  GdkPixbuf *user_pixbuf = gdk_pixbuf_new_from_file(user_path, NULL);
+  GdkPixbuf *route_pixbuf = gdk_pixbuf_new_from_file(route_path, NULL);
+  GdkPixbuf *station_pixbuf = gdk_pixbuf_new_from_file(station_path, NULL);
+  GdkPixbuf *bus_pixbuf = gdk_pixbuf_new_from_file(bustype_path, NULL);
+  GdkPixbuf *schedule_pixbuf = gdk_pixbuf_new_from_file(schedule_path, NULL);
+  GdkPixbuf *ticket_pixbuf = gdk_pixbuf_new_from_file(ticket_path, NULL);
+  GdkPixbuf *printer_pixbuf = gdk_pixbuf_new_from_file(printer_path, NULL);
+  GdkPixbuf *tool_pixbuf = gdk_pixbuf_new_from_file(tool_path, NULL);
 
+  g_free (province_path);
+  g_free (employee_path);
+  g_free (user_path);
+  g_free (station_path);
+  g_free (bustype_path);
+  g_free (schedule_path);
+  g_free (ticket_path);
+  g_free (printer_path);
+  g_free (tool_path);
+  
   // Create a tree store to hold the icon data
   GtkTreeStore *store = gtk_tree_store_new(2, GDK_TYPE_PIXBUF, G_TYPE_STRING);
   GtkTreeIter iter;

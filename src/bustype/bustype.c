@@ -61,14 +61,14 @@ do_bustype (GtkApplication *app, gpointer user_data){
   //insertProvinceToListStore (busObj); // Insert data to GtkListStore at the first run.
 
   // don't use & before busObj.
-  //g_signal_connect (busObj->btnNew, "clicked", G_CALLBACK (prvNew_click), busObj);
-  //g_signal_connect (busObj->entPrvCode, "focus-in-event", G_CALLBACK (entPrvCode_focus), busObj);
-  //g_signal_connect (busObj->entPrvName, "focus-in-event", G_CALLBACK (entPrvName_focus), busObj);
-  //g_signal_connect (busObj->entPrvCode, "key-release-event", G_CALLBACK (entPrvCode_release), busObj);
-  //g_signal_connect (busObj->entPrvName, "key-release-event", G_CALLBACK (entPrvName_release), busObj);
-  //g_signal_connect (busObj->btnSave, "clicked", G_CALLBACK (prvSave_click), busObj);
-  //g_signal_connect (busObj->btnDelete, "clicked", G_CALLBACK (prvDelete_click), busObj);
-  //g_signal_connect (busObj->treeView, "cursor-changed", G_CALLBACK (prv_row_change), busObj);
+  g_signal_connect (busObj->btnNew, "clicked", G_CALLBACK (busNew_click), busObj);
+  g_signal_connect (busObj->entBusCode, "grab-focus", G_CALLBACK (entBusCode_grab_focus), busObj);
+  g_signal_connect (busObj->entBusName, "grab-focus", G_CALLBACK (entBusName_grab_focus), busObj);
+  g_signal_connect (busObj->entBusCode, "key-release-event", G_CALLBACK (entBusCode_release), busObj);
+  g_signal_connect (busObj->entBusName, "key-release-event", G_CALLBACK (entBusName_release), busObj);
+  g_signal_connect (busObj->btnSave, "clicked", G_CALLBACK (busSave_click), busObj);
+  g_signal_connect (busObj->btnDelete, "clicked", G_CALLBACK (busDelete_click), busObj);
+  g_signal_connect (busObj->treeView, "cursor-changed", G_CALLBACK (bus_row_change), busObj);
   g_signal_connect (busObj->btnExit, "clicked", G_CALLBACK (busExit_click), busObj);
   g_signal_connect (busObj->window, "destroy", G_CALLBACK (busExit_click), busObj);
   

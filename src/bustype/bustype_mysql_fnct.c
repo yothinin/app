@@ -76,7 +76,7 @@ gboolean insertBustype (Bustype bustype) {
 gboolean deleteBustype (const gchar *busCode) {
   MYSQL *conn = connect_to_db();
   gboolean result = FALSE;
-  gchar *sql = g_strdup_printf("DELETE FROM bustypeWHERE bus_code = '%s'", busCode);
+  gchar *sql = g_strdup_printf("DELETE FROM bustype WHERE bus_code = '%s'", busCode);
 
   if (query(conn, sql) == 0) {
     result = TRUE;

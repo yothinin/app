@@ -18,5 +18,7 @@ void bus_row_change (GtkWidget *treeView, gpointer userdata);
 void bus_update_tree_view(BustypeWidgets *bustypeObj, Bustype bustype, gboolean result);
 void bus_update_tree_store(BustypeWidgets *bustypeObj, Bustype bustype, gboolean result);
 void insertBustypeToListStore (BustypeWidgets *bustypeObj);
+void entBusCode_grab_focus (GtkWidget *widget, gpointer user_data);
+void entBusName_grab_focus (GtkWidget *widget, gpointer user_data);
 
 #endif // PROVINCE_WIDGET_FNCT_H

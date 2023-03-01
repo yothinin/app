@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <gtk/gtk.h>
 #include <mariadb/mysql.h>
+#include "functions.h"
 
 #define CONFIG_FILE ".mysql_options"
 #define GROUP_NAME "client"
@@ -31,6 +33,8 @@ void close_db_connection(MYSQL *conn) {
 int query(MYSQL *conn, const char *sql) {
   if (mysql_query(conn, sql)) {
     fprintf(stderr, "mysql_query() failed: %s\n", mysql_error(conn));
+    log_activity ("mysql", mysql_error(conn));
+    log_activity ("mysql", sql);
     return 1;
   }
   return 0;

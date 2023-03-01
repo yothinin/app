@@ -112,6 +112,10 @@ gboolean insertRoute (Route route) {
   
   gchar *sql = g_strdup_printf ("INSERT INTO route (rou_code, rou_direction, sta_from, sta_to) VALUE ('%s', '%s', '%s', '%s')", route.rouCode, route.rouDirection, route.staFrom, route.staTo);
   
+  char *logmsg = log_message ("Insert", &route, sizeof (route)/sizeof (char*));
+  log_activity ("route", logmsg);
+  free (logmsg);
+  
   if (query (conn, sql) == 0){
     result = TRUE;
   }else{
@@ -132,6 +136,10 @@ gboolean updateRoute (Route route){
   gboolean result = FALSE;
   gchar *sql = g_strdup_printf ("UPDATE route SET sta_from = '%s', sta_to = '%s' WHERE rou_code = '%s' and rou_direction = '%s';", route.staFrom, route.staTo, route.rouCode, route.rouDirection);
   
+  char *logmsg = log_message ("Update", &route, sizeof (route)/sizeof (char*));
+  log_activity ("route", logmsg);
+  free (logmsg);
+  
   if (query (conn, sql) == 0){
     result = TRUE;
   }else {
@@ -151,6 +159,10 @@ gboolean deleteRoute(Route *route) {
   MYSQL *conn = connect_to_db();
   gboolean result = FALSE;
   gchar *sql = g_strdup_printf("DELETE FROM route WHERE rou_code = '%s' and rou_direction = '%s';", route->rouCode, route->rouDirection);
+  
+  char *logmsg = log_message ("Delete", &route, sizeof (route)/sizeof (char*));
+  log_activity ("route", logmsg);
+  free (logmsg);
 
   if (query(conn, sql) == 0) {
     result = TRUE;

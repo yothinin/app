@@ -15,5 +15,7 @@ gint find_combo_box_index(GtkComboBox *combo_box, const gchar *id);
 char *dateFormat(char *lang, time_t date, char *type);
 gchar *read_number(long number);
 gchar *thai_baht_conversion(double amount_number);
+void log_activity(const char *module, const char *message);
+char *log_message(const char *log_type, const void *data, size_t num_fields);
 
 #endif //FUNCTIONS_H

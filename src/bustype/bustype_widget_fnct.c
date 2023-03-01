@@ -9,10 +9,12 @@
 #define GTK_GTK_H
 #include <gtk/gtk.h>
 #endif //GTK_GTK_H
+
 #include "functions.h"
 #include "bustype_struct.h"
 #include "bustype_widget_fnct.h"
 #include "bustype_mysql_fnct.h"
+
 
 /*
  * to declare function name use these form:
@@ -27,6 +29,14 @@
 
 void entBusCode_focus (GtkWidget *widget, gpointer userdata){
   change_keyb ("us");
+}
+
+void entBusCode_grab_focus(GtkWidget *widget, gpointer user_data) {
+    change_keyb ("us");
+}
+
+void entBusName_grab_focus(GtkWidget *widget, gpointer user_data) {
+    change_keyb ("th");
 }
 
 gboolean entBusCode_release (GtkWidget *widget, GdkEventKey *event, gpointer userdata){
@@ -110,33 +120,6 @@ void busNew_click (GtkWidget *widget, gpointer userdata){
   bustypeObj->edit = 0; // New, save
 }
 
-void busDelete_click (GtkWidget *widget, gpointer userdata){
-  BustypeWidgets *bustypeObj = (BustypeWidgets*) userdata;
-  
-    const gchar *busCode = gtk_entry_get_text (GTK_ENTRY(bustypeObj->entBusCode));
-    const gchar *busName = gtk_entry_get_text (GTK_ENTRY(bustypeObj->entBusName));
-    if (busCode[0] != '\0'){
-      g_print ("Delete -> Code: %s, %s\n", busCode, busName);
-      gboolean result = deleteBustype (busCode);
-      if (result) {
-        Bustype bustype = {g_strdup (busCode), g_strdup (busName)};
-        GtkTreeIter *selIter = get_iter (busCode, 0, 0, bustypeObj);
-        if (selIter != NULL){
-          gtk_tree_store_remove (GTK_TREE_STORE (bustypeObj->model), &bustypeObj->iter);
-        }
-        g_free (bustype.busCode);
-        g_free (bustype.busName);
-        
-        gint number_of_rows = gtk_tree_model_iter_n_children(GTK_TREE_MODEL(bustypeObj->treeStore), NULL);
-        if (number_of_rows == 0)
-          busNew_click (NULL, bustypeObj);
-
-      } else {
-        g_print("Failed to delete bustype.\n");
-      }
-    }
-}
-
 void bus_row_change (GtkWidget *treeView, gpointer userdata) {
   BustypeWidgets *bustypeObj = (BustypeWidgets*) userdata;
   bustypeObj->model = gtk_tree_view_get_model (GTK_TREE_VIEW (bustypeObj->treeView));
@@ -176,6 +159,11 @@ void busSave_click(GtkWidget *widget, gpointer userdata) {
     g_print("Save -> Code: %s, Name: %s\n", busCode, busName);
 
     Bustype bustype = {g_strdup(busCode), g_strdup(busName)};
+    //log_message("Delete:", &bustype, sizeof(bustype) / sizeof(char *));
+    char *logmsg = log_message("Save", &bustype, sizeof (bustype)/sizeof (char*));
+    log_activity ("bustype", logmsg);
+    free (logmsg);
+
     if (bustypeObj->edit == 0) { // Insert mode.
       gboolean result = insertBustype (bustype);
       if (result)
@@ -191,6 +179,40 @@ void busSave_click(GtkWidget *widget, gpointer userdata) {
 
     busNew_click(NULL, bustypeObj);
   }
+}
+
+void busDelete_click (GtkWidget *widget, gpointer userdata){
+  BustypeWidgets *bustypeObj = (BustypeWidgets*) userdata;
+  
+    const gchar *busCode = gtk_entry_get_text (GTK_ENTRY(bustypeObj->entBusCode));
+    const gchar *busName = gtk_entry_get_text (GTK_ENTRY(bustypeObj->entBusName));
+
+    if (busCode[0] != '\0'){
+      g_print ("Delete -> Code: %s, %s\n", busCode, busName);
+      gboolean result = deleteBustype (busCode);
+      if (result) {
+        Bustype bustype = {g_strdup (busCode), g_strdup (busName)};
+        
+        //log_message("Delete:", &bustype, sizeof(bustype) / sizeof(char *));
+        char *logmsg = log_message("Delete", &bustype, sizeof (bustype)/sizeof (char*));
+        log_activity ("bustype", logmsg);
+        free (logmsg);
+        
+        GtkTreeIter *selIter = get_iter (busCode, 0, 0, bustypeObj);
+        if (selIter != NULL){
+          gtk_tree_store_remove (GTK_TREE_STORE (bustypeObj->model), &bustypeObj->iter);
+        }
+        g_free (bustype.busCode);
+        g_free (bustype.busName);
+        
+        gint number_of_rows = gtk_tree_model_iter_n_children(GTK_TREE_MODEL(bustypeObj->treeStore), NULL);
+        if (number_of_rows == 0)
+          busNew_click (NULL, bustypeObj);
+
+      } else {
+        g_print("Failed to delete bustype.\n");
+      }
+    }
 }
 
 void bus_update_tree_view(BustypeWidgets *bustypeObj, Bustype bustype, gboolean result) {
