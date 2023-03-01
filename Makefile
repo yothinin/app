@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-g -Wall
-LIBS=`pkg-config --libs --cflags gtk+-3.0` -lmariadbclient -I/usr/include/glib-2.0 -lm -lX11 -lxkbfile -rdynamic
+LIBS=`pkg-config --libs --cflags gtk+-3.0` -lmariadbclient -I/usr/include/glib-2.0 -lm -lX11 -lxkbfile -rdynamic -lgtk-3
 MENU_SOURCES=src/menu/menu.c \
               src/province/province.c \
               src/bustype/bustype.c \

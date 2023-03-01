@@ -40,7 +40,7 @@ do_bustype (GtkApplication *app, gpointer user_data){
   busObj->builder = gtk_builder_new_from_file("glade/tms_bus.glade");
   //gtk_builder_connect_signals(builder, NULL);
 
-  busObj->window = (GtkWidget*)gtk_builder_get_object(busObj->builder, "window");
+  busObj->window = (GtkWidget*)gtk_builder_get_object(busObj->builder, "main_window");
   gtk_window_set_position (GTK_WINDOW(busObj->window), GTK_ALIGN_CENTER);
 
   busObj->edit = 0;

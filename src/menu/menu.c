@@ -72,23 +72,53 @@ static void on_window_closed(GtkWidget *widget, gpointer user_data) {
 
 }
 
+static void btnLogout_click (GtkWidget *widget, gpointer user_data) {
+  gtk_widget_set_sensitive (icon_view, FALSE);
+
+  GList *children, *iter;
+  children = gtk_container_get_children(GTK_CONTAINER(vUserInfo));
+  for (iter = children; iter != NULL; iter = g_list_next(iter)) {
+    g_print ("Widget name: %s\n", gtk_widget_get_name (GTK_WIDGET (iter->data)));
+    gtk_widget_destroy(GTK_WIDGET(iter->data));
+  }
+  g_list_free(children);
+
+  // hide vUserInfo box
+  gtk_widget_hide (GTK_WIDGET (vUserInfo));
+
+  gtk_widget_show_all (vUserBox);
+}
+
 static void btnLogin_click(GtkWidget *widget, gpointer user_data){
   gtk_widget_set_sensitive (icon_view, TRUE);
   gtk_widget_hide (vUserBox);
+  
   GtkWidget *lblLoginName = gtk_label_new ("โยธิน อินบรรเลง");
   GtkWidget *btnLogout = gtk_button_new_with_label ("Logout");
-  gtk_box_pack_start (GTK_BOX (vUserInfo), lblLoginName, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vUserInfo), btnLogout, FALSE, FALSE, 0);
+  gtk_button_set_relief(GTK_BUTTON(btnLogout), GTK_RELIEF_NONE); // remove button border
+
+  gtk_widget_set_name (btnLogout, "my-button");
+  
+  GtkCssProvider *provider = gtk_css_provider_new();
+  
+  gtk_css_provider_load_from_path(provider, "style.css", NULL);
+  //gtk_css_provider_load_from_data(provider, ".my-class { background-color: #00ff00; }", -1, NULL);
+
+  GtkStyleContext *context = gtk_widget_get_style_context(btnLogout);
+  gtk_style_context_add_class (context, "my-class");
+  gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
+  g_object_unref(provider);
+
+  g_signal_connect (btnLogout, "clicked", G_CALLBACK (btnLogout_click), NULL);
+  gtk_box_pack_start (GTK_BOX (vUserInfo), lblLoginName, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (vUserInfo), btnLogout, FALSE, FALSE, 2);
+
   gtk_widget_show_all (vUserInfo);
 }
 
 static GtkWidget *do_menu (GtkApplication* app,
           gpointer        user_data) 
 {
-
-  //RouteWidgets *mobj = (RouteWidgets*) user_data; // pointer to struct
-  //gboolean *is_running_ptr = (gboolean *) user_data;
-
   GtkWidget *window = NULL;
   window = gtk_application_window_new (app);
 
@@ -109,8 +139,8 @@ static GtkWidget *do_menu (GtkApplication* app,
   //GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title(GTK_WINDOW(window), "TMS 1.0");
   gtk_container_set_border_width(GTK_CONTAINER(window), 10);
-  gtk_window_set_default_size (GTK_WINDOW (window), 460, 600);
-  GdkGeometry hints = { .min_width = 460, .min_height = 600 };
+  gtk_window_set_default_size (GTK_WINDOW (window), 460, 640);
+  GdkGeometry hints = { .min_width = 460, .min_height = 640 };
   gtk_window_set_geometry_hints(GTK_WINDOW(window), NULL, &hints, GDK_HINT_MIN_SIZE);
 
 
@@ -196,7 +226,9 @@ static GtkWidget *do_menu (GtkApplication* app,
   // Create a new icon view widget
   icon_view = gtk_icon_view_new();
   GtkWidget *vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+  
   vUserBox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+
   GtkWidget *hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 2);
   GtkWidget *lblUser = gtk_label_new ("รหัสผู้ใช้งาน");
   gtk_label_set_width_chars (GTK_LABEL (lblUser), 10);
@@ -267,18 +299,24 @@ static GtkWidget *do_menu (GtkApplication* app,
 
 static void
 activate (GtkApplication* app, gpointer user_data){
-  //RouteWidgets *mobj = (RouteWidgets*) user_data;
-  //gboolean *is_running_ptr = (gboolean *) user_data;
   GtkWidget *main_window = do_menu (app, NULL);
   gtk_widget_show_all (main_window);
 }
 
 int
 main (int argc, char **argv){
+  
   int status;
-  //RouteWidgets mobj;
-
-  //mobj.is_running_route = FALSE;
+  const gchar *home_dir = g_get_home_dir();
+  gchar *app_dir = g_build_filename (home_dir, "projects", "app", NULL);
+  
+  if (chdir (app_dir) != 0) {
+    perror ("chdir() error");
+    g_free (app_dir);
+  }else{
+    g_print ("Change dir to: %s\n", app_dir);
+  }
+  g_free (app_dir);
   
   app = gtk_application_new ("com.pimpanya", G_APPLICATION_FLAGS_NONE);
   g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);

@@ -156,6 +156,7 @@
                       <object class="GtkEntry" id="entPrvCode">
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
+                        <property name="max-length">2</property>
                         <property name="width-chars">3</property>
                       </object>
                       <packing>
