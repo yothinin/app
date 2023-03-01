@@ -24,7 +24,7 @@ static void on_icon_view_item_activated(GtkIconView *icon_view, GtkTreePath *pat
     //RouteWidgets *mobj = (RouteWidgets*) user_data; // pointer to struct
     //gboolean *is_running_ptr = (gboolean *) user_data;
     //*is_running_ptr = FALSE;
-    
+
     // Get the model and iter of the selected item
     model = gtk_icon_view_get_model(icon_view);
     gtk_tree_model_get_iter(model, &iter, path);
@@ -32,7 +32,7 @@ static void on_icon_view_item_activated(GtkIconView *icon_view, GtkTreePath *pat
     // Get the text of the selected item
     gchar *text;
     gtk_tree_model_get(model, &iter, 1, &text, -1);
-    
+
     GtkWidget *running = NULL;
     if (strcmp (text, "จังหวัด") == 0){
       if (!is_running_province)
@@ -46,7 +46,7 @@ static void on_icon_view_item_activated(GtkIconView *icon_view, GtkTreePath *pat
         running = do_bustype (app, &is_running_bustype);
       else
         g_print ("โปรแกรมข้อมูลประเภทรถถูกเปิดไว้แล้ว ไม่สามารถเรียกซ้ำได้\n");
-        
+
     }
 
     if (strcmp (text, "เส้นทาง") == 0) {
@@ -64,7 +64,7 @@ static void on_icon_view_item_activated(GtkIconView *icon_view, GtkTreePath *pat
     }
     if (running != NULL)
       gtk_widget_show_all (running);
-      
+
     g_free(text);
 }
 
@@ -93,7 +93,7 @@ static GtkWidget *do_menu (GtkApplication* app,
   window = gtk_application_window_new (app);
 
   GError *error = NULL;
-  GdkPixbuf *icon = gdk_pixbuf_new_from_file("icons/transport.png", &error);
+  GdkPixbuf *icon = gdk_pixbuf_new_from_file("../icons/transport.png", &error);
   if (error == NULL){
     gtk_window_set_icon (GTK_WINDOW (window), icon);
     g_object_unref (icon);
@@ -112,16 +112,23 @@ static GtkWidget *do_menu (GtkApplication* app,
 
 
   // Create three pixbufs from image files
-  GdkPixbuf *province_pixbuf = gdk_pixbuf_new_from_file("icons/thailand.ico", NULL);
-  GdkPixbuf *employee_pixbuf = gdk_pixbuf_new_from_file("icons/employee.png", NULL);
-  GdkPixbuf *user_pixbuf = gdk_pixbuf_new_from_file("icons/user.png", NULL);
-  GdkPixbuf *route_pixbuf = gdk_pixbuf_new_from_file("icons/motorway.png", NULL);
-  GdkPixbuf *station_pixbuf = gdk_pixbuf_new_from_file("icons/station.png", NULL);
-  GdkPixbuf *bus_pixbuf = gdk_pixbuf_new_from_file("icons/bus.png", NULL);
-  GdkPixbuf *schedule_pixbuf = gdk_pixbuf_new_from_file("icons/schedule.png", NULL);
-  GdkPixbuf *ticket_pixbuf = gdk_pixbuf_new_from_file("icons/ticket.png", NULL);
-  GdkPixbuf *printer_pixbuf = gdk_pixbuf_new_from_file("icons/printer.png", NULL);
-  GdkPixbuf *tool_pixbuf = gdk_pixbuf_new_from_file("icons/tool.png", NULL);
+  //GdkPixbuf *province_pixbuf = gdk_pixbuf_new_from_file("../../icons/thailand.ico", NULL);
+  
+  GdkPixbuf *province_pixbuf;
+  char *icon_path;
+  icon_path = g_build_filename(g_path_get_dirname(__FILE__), "..", "..", "icons", "thailand.ico", NULL);
+  province_pixbuf = gdk_pixbuf_new_from_file(icon_path, NULL);
+  g_free(icon_path);
+  
+  GdkPixbuf *employee_pixbuf = gdk_pixbuf_new_from_file("../../icons/employee.png", NULL);
+  GdkPixbuf *user_pixbuf = gdk_pixbuf_new_from_file("../../icons/user.png", NULL);
+  GdkPixbuf *route_pixbuf = gdk_pixbuf_new_from_file("../../icons/motorway.png", NULL);
+  GdkPixbuf *station_pixbuf = gdk_pixbuf_new_from_file("../../icons/station.png", NULL);
+  GdkPixbuf *bus_pixbuf = gdk_pixbuf_new_from_file("../../icons/bus.png", NULL);
+  GdkPixbuf *schedule_pixbuf = gdk_pixbuf_new_from_file("../../icons/schedule.png", NULL);
+  GdkPixbuf *ticket_pixbuf = gdk_pixbuf_new_from_file("../../icons/ticket.png", NULL);
+  GdkPixbuf *printer_pixbuf = gdk_pixbuf_new_from_file("../../icons/printer.png", NULL);
+  GdkPixbuf *tool_pixbuf = gdk_pixbuf_new_from_file("../../icons/tool.png", NULL);
 
   // Create a tree store to hold the icon data
   GtkTreeStore *store = gtk_tree_store_new(2, GDK_TYPE_PIXBUF, G_TYPE_STRING);

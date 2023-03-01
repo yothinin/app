@@ -9,11 +9,11 @@
 #define GTK_GTK_H
 #include <gtk/gtk.h>
 #endif //GTK_GTK_H
-#include "functions.h"
-#include "route_struct.h"
-#include "station_struct.h"
-#include "route_mysql_fnct.h"
-#include "route_widget_fnct.h"
+#include "../common/functions.h"
+#include "../route/route_struct.h"
+#include "../route/route_mysql_fnct.h"
+#include "../route/route_widget_fnct.h"
+#include "../station/station_struct.h"
 
 /*
  * to declare function name use these form:

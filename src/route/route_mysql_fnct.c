@@ -1,8 +1,8 @@
 
-#include "route_mysql_fnct.h"
-#include "station_struct.h"
-#include "functions.h"
-#include "mysql_fnct.h"
+#include "../route/route_mysql_fnct.h"
+#include "../station/station_struct.h"
+#include "../common/functions.h"
+#include "../common/mysql_fnct.h"
 
 // This functin add data from mysql to GList and return to caller
 // Call from insertDataToTreeListStore() in widget_route_fnct.c

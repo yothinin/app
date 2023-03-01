@@ -17,8 +17,9 @@
 #include <time.h>
 #include <stdio.h>
 
-#include "station_struct.h"
-#include "route_struct.h"
+//#include "station_struct.h"
+#include "../station/station_struct.h"
+#include "../route/route_struct.h"
 
 
 char *dateFormat(char *lang, time_t date, char *type) {
