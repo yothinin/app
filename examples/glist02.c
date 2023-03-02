@@ -1,3 +1,7 @@
+//
+// gcc -o glist02 glist02.c `pkg-config --cflags --libs glib-2.0`
+//
+
 #include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
