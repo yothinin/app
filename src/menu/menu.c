@@ -17,6 +17,51 @@ gboolean is_running_station = FALSE;
 gboolean is_running_province = FALSE;
 gboolean is_running_bustype = FALSE;
 
+static void btnLogout_click (GtkWidget *widget, gpointer user_data) {
+  gtk_widget_set_sensitive (icon_view, FALSE);
+
+  GList *children, *iter;
+  children = gtk_container_get_children(GTK_CONTAINER(vUserInfo));
+  for (iter = children; iter != NULL; iter = g_list_next(iter)) {
+    g_print ("Widget name: %s\n", gtk_widget_get_name (GTK_WIDGET (iter->data)));
+    gtk_widget_destroy(GTK_WIDGET(iter->data));
+  }
+  g_list_free(children);
+
+  // hide vUserInfo box
+  gtk_widget_hide (GTK_WIDGET (vUserInfo));
+
+  gtk_widget_show_all (vUserBox);
+}
+
+static void btnLogin_click(GtkWidget *widget, gpointer user_data){
+  gtk_widget_set_sensitive (icon_view, TRUE);
+  gtk_widget_hide (vUserBox);
+  
+  GtkWidget *lblLoginName = gtk_label_new ("โยธิน อินบรรเลง");
+  GtkWidget *btnLogout = gtk_button_new_with_label ("Logout");
+  gtk_button_set_relief(GTK_BUTTON(btnLogout), GTK_RELIEF_NONE); // remove button border
+
+  gtk_widget_set_name (lblLoginName, "my-label");
+  gtk_widget_set_name (btnLogout, "my-button");
+  
+  GtkCssProvider *provider = gtk_css_provider_new();
+  
+  gtk_css_provider_load_from_path(provider, "style.css", NULL);
+  //gtk_css_provider_load_from_data(provider, ".my-class { background-color: #00ff00; }", -1, NULL);
+
+  GtkStyleContext *context = gtk_widget_get_style_context(btnLogout);
+  gtk_style_context_add_class (context, "my-class");
+  gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
+  g_object_unref(provider);
+
+  g_signal_connect (btnLogout, "clicked", G_CALLBACK (btnLogout_click), NULL);
+  gtk_box_pack_start (GTK_BOX (vUserInfo), lblLoginName, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (vUserInfo), btnLogout, FALSE, FALSE, 2);
+
+  gtk_widget_show_all (vUserInfo);
+}
+
 static void on_icon_view_item_activated(GtkIconView *icon_view, GtkTreePath *path, gpointer user_data) {
     GtkTreeModel *model;
     GtkTreeIter iter;
@@ -70,50 +115,6 @@ static void on_icon_view_item_activated(GtkIconView *icon_view, GtkTreePath *pat
 
 static void on_window_closed(GtkWidget *widget, gpointer user_data) {
 
-}
-
-static void btnLogout_click (GtkWidget *widget, gpointer user_data) {
-  gtk_widget_set_sensitive (icon_view, FALSE);
-
-  GList *children, *iter;
-  children = gtk_container_get_children(GTK_CONTAINER(vUserInfo));
-  for (iter = children; iter != NULL; iter = g_list_next(iter)) {
-    g_print ("Widget name: %s\n", gtk_widget_get_name (GTK_WIDGET (iter->data)));
-    gtk_widget_destroy(GTK_WIDGET(iter->data));
-  }
-  g_list_free(children);
-
-  // hide vUserInfo box
-  gtk_widget_hide (GTK_WIDGET (vUserInfo));
-
-  gtk_widget_show_all (vUserBox);
-}
-
-static void btnLogin_click(GtkWidget *widget, gpointer user_data){
-  gtk_widget_set_sensitive (icon_view, TRUE);
-  gtk_widget_hide (vUserBox);
-  
-  GtkWidget *lblLoginName = gtk_label_new ("โยธิน อินบรรเลง");
-  GtkWidget *btnLogout = gtk_button_new_with_label ("Logout");
-  gtk_button_set_relief(GTK_BUTTON(btnLogout), GTK_RELIEF_NONE); // remove button border
-
-  gtk_widget_set_name (btnLogout, "my-button");
-  
-  GtkCssProvider *provider = gtk_css_provider_new();
-  
-  gtk_css_provider_load_from_path(provider, "style.css", NULL);
-  //gtk_css_provider_load_from_data(provider, ".my-class { background-color: #00ff00; }", -1, NULL);
-
-  GtkStyleContext *context = gtk_widget_get_style_context(btnLogout);
-  gtk_style_context_add_class (context, "my-class");
-  gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
-  g_object_unref(provider);
-
-  g_signal_connect (btnLogout, "clicked", G_CALLBACK (btnLogout_click), NULL);
-  gtk_box_pack_start (GTK_BOX (vUserInfo), lblLoginName, FALSE, FALSE, 2);
-  gtk_box_pack_start (GTK_BOX (vUserInfo), btnLogout, FALSE, FALSE, 2);
-
-  gtk_widget_show_all (vUserInfo);
 }
 
 static GtkWidget *do_menu (GtkApplication* app,
