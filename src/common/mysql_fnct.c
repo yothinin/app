@@ -22,11 +22,12 @@ MYSQL *connect_to_db() {
     mysql_close(conn);
     return NULL;
   }
-  
+  g_print ("Connected to db\n");
   return conn;
 }
 
 void close_db_connection(MYSQL *conn) {
+  g_print ("Closed from db\n");
   mysql_close(conn);
 }
 

@@ -25,19 +25,9 @@ const char* provinces[] = {
         "ภูเก็ต", "สุราษฎร์ธานี", "ระนอง", "ชุมพร", "สงขลา",
         "สตูล", "ตรัง", "พัทลุง", "ปัตตานี", "ยะลา", "นราธิวาส", "บึงกาฬ"};
 
-gboolean compare_thai_consonants(gunichar a, gunichar b) {
-    const gchar *thai_consonants = "กขฃฅฆงจฉชซฌญฎฏฐฑฒณตถทธนบปผฝพฟภมยรฤฤาฦลฬวศษสหฮ";
-    if (a == b) {
-        return TRUE;
-    }
-    if (strchr(thai_consonants, a) && strchr(thai_consonants, b)) {
-        return a < b;
-    }
-    return a < b;
-}
-
 int main() {
     setlocale(LC_ALL, "en_US.utf8");
+    //setlocale(LC_ALL, "th_TH.UTF-8");
     GList *list = NULL;
     
     int max_arr = sizeof (provinces)/sizeof (char*);
