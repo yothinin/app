@@ -13,10 +13,10 @@ MYSQL *connect_to_db() {
     fprintf(stderr, "mysql_init() failed\n");
     return NULL;
   }
-  
+
   mysql_options(conn, MYSQL_READ_DEFAULT_GROUP, GROUP_NAME);
   mysql_options(conn, MYSQL_READ_DEFAULT_FILE, CONFIG_FILE);
-  
+
   if (!mysql_real_connect(conn, NULL, NULL, NULL, NULL, 0, NULL, 0)) {
     fprintf(stderr, "mysql_real_connect() failed: %s\n", mysql_error(conn));
     mysql_close(conn);

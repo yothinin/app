@@ -19,6 +19,7 @@ gboolean is_running_bustype = FALSE;
 
 static void btnLogout_click (GtkWidget *widget, gpointer user_data) {
   gtk_widget_set_sensitive (icon_view, FALSE);
+  gtk_icon_view_unselect_all (GTK_ICON_VIEW (icon_view));
 
   GList *children, *iter;
   children = gtk_container_get_children(GTK_CONTAINER(vUserInfo));
@@ -37,17 +38,19 @@ static void btnLogout_click (GtkWidget *widget, gpointer user_data) {
 static void btnLogin_click(GtkWidget *widget, gpointer user_data){
   gtk_widget_set_sensitive (icon_view, TRUE);
   gtk_widget_hide (vUserBox);
-  
+
   GtkWidget *lblLoginName = gtk_label_new ("โยธิน อินบรรเลง");
   GtkWidget *btnLogout = gtk_button_new_with_label ("Logout");
   gtk_button_set_relief(GTK_BUTTON(btnLogout), GTK_RELIEF_NONE); // remove button border
 
   gtk_widget_set_name (lblLoginName, "my-label");
   gtk_widget_set_name (btnLogout, "my-button");
-  
+
   GtkCssProvider *provider = gtk_css_provider_new();
-  
-  gtk_css_provider_load_from_path(provider, "style.css", NULL);
+
+  char *style_path = g_build_filename (g_path_get_dirname (__FILE__), "..", "..", "css", "style.css", NULL);
+
+  gtk_css_provider_load_from_path(provider, style_path, NULL);
   //gtk_css_provider_load_from_data(provider, ".my-class { background-color: #00ff00; }", -1, NULL);
 
   GtkStyleContext *context = gtk_widget_get_style_context(btnLogout);
@@ -59,6 +62,7 @@ static void btnLogin_click(GtkWidget *widget, gpointer user_data){
   gtk_box_pack_start (GTK_BOX (vUserInfo), lblLoginName, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vUserInfo), btnLogout, FALSE, FALSE, 2);
 
+  g_free (style_path);
   gtk_widget_show_all (vUserInfo);
 }
 
@@ -118,7 +122,7 @@ static void on_window_closed(GtkWidget *widget, gpointer user_data) {
 }
 
 static GtkWidget *do_menu (GtkApplication* app,
-          gpointer        user_data) 
+          gpointer        user_data)
 {
   GtkWidget *window = NULL;
   window = gtk_application_window_new (app);
@@ -127,7 +131,7 @@ static GtkWidget *do_menu (GtkApplication* app,
   char *transport_path = g_build_filename (g_path_get_dirname (__FILE__), "..", "..", "icons", "transport.png", NULL);
   GdkPixbuf *icon = gdk_pixbuf_new_from_file(transport_path, &error);
   g_free (transport_path);
-  
+
   if (error == NULL){
     gtk_window_set_icon (GTK_WINDOW (window), icon);
     g_object_unref (icon);
@@ -135,7 +139,7 @@ static GtkWidget *do_menu (GtkApplication* app,
     g_warning("Unable to load icon: %s", error->message);
     g_error_free(error);
   }
-  
+
   // Create a new window
   //GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title(GTK_WINDOW(window), "TMS 1.0");
@@ -147,7 +151,7 @@ static GtkWidget *do_menu (GtkApplication* app,
 
   // Create three pixbufs from image files
   //GdkPixbuf *province_pixbuf = gdk_pixbuf_new_from_file("../../icons/thailand.ico", NULL);
-  
+
   char *province_path, *employee_path, *user_path, *route_path, *station_path, *bustype_path, *schedule_path, *ticket_path, *printer_path, *tool_path;
   province_path = g_build_filename(g_path_get_dirname(__FILE__), "..", "..", "icons", "thailand.ico", NULL);
   employee_path = g_build_filename(g_path_get_dirname(__FILE__), "..", "..", "icons", "employee.png", NULL);
@@ -159,7 +163,7 @@ static GtkWidget *do_menu (GtkApplication* app,
   ticket_path = g_build_filename(g_path_get_dirname(__FILE__), "..", "..", "icons", "ticket.png", NULL);
   printer_path = g_build_filename(g_path_get_dirname(__FILE__), "..", "..", "icons", "printer.png", NULL);
   tool_path = g_build_filename(g_path_get_dirname(__FILE__), "..", "..", "icons", "tool.png", NULL);
-  
+
   GdkPixbuf *province_pixbuf = gdk_pixbuf_new_from_file(province_path, NULL);
   GdkPixbuf *employee_pixbuf = gdk_pixbuf_new_from_file(employee_path, NULL);
   GdkPixbuf *user_pixbuf = gdk_pixbuf_new_from_file(user_path, NULL);
@@ -180,7 +184,7 @@ static GtkWidget *do_menu (GtkApplication* app,
   g_free (ticket_path);
   g_free (printer_path);
   g_free (tool_path);
-  
+
   // Create a tree store to hold the icon data
   GtkTreeStore *store = gtk_tree_store_new(2, GDK_TYPE_PIXBUF, G_TYPE_STRING);
   GtkTreeIter iter;
@@ -192,7 +196,7 @@ static GtkWidget *do_menu (GtkApplication* app,
   // Add the Employee icon
   gtk_tree_store_append(store, &iter, NULL);
   gtk_tree_store_set(store, &iter, 0, employee_pixbuf, 1, "พนักงาน", -1);
-  
+
   // Add the User icon
   gtk_tree_store_append(store, &iter, NULL);
   gtk_tree_store_set(store, &iter, 0, user_pixbuf, 1, "ผู้ใช้งาน", -1);
@@ -227,7 +231,7 @@ static GtkWidget *do_menu (GtkApplication* app,
   // Create a new icon view widget
   icon_view = gtk_icon_view_new();
   GtkWidget *vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-  
+
   vUserBox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 
   GtkWidget *hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 2);
@@ -246,7 +250,7 @@ static GtkWidget *do_menu (GtkApplication* app,
   gtk_box_pack_start (GTK_BOX (hbox), lblUser, FALSE, FALSE, 1);
   gtk_box_pack_start (GTK_BOX (hbox), entUser, FALSE, FALSE, 1);
   gtk_box_pack_start (GTK_BOX (vUserBox), hbox, FALSE, FALSE, 1);
-  
+
   hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 2);
   gtk_box_pack_start (GTK_BOX (hbox), lblPass, FALSE, FALSE, 1);
   gtk_box_pack_start (GTK_BOX (hbox), entPass, FALSE, FALSE, 1);
@@ -256,16 +260,16 @@ static GtkWidget *do_menu (GtkApplication* app,
   gtk_box_pack_start (GTK_BOX (hbox), lblEmpty, FALSE, FALSE, 1);
   gtk_box_pack_start (GTK_BOX (hbox), btnLogin, FALSE, FALSE, 1);
   gtk_box_pack_start (GTK_BOX (vUserBox), hbox, FALSE, FALSE, 1);
-  
+
   gtk_box_pack_start (GTK_BOX (vbox), vUserBox, FALSE, FALSE, 0);
-  
+
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
-  gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);  
+  gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);
   gtk_container_add(GTK_CONTAINER(scrolled), icon_view);
-  
+
   vUserInfo = gtk_box_new (GTK_ORIENTATION_VERTICAL, 2);
   gtk_box_pack_end (GTK_BOX (vbox), vUserInfo, FALSE, FALSE, 0);
-    
+
   gtk_container_add (GTK_CONTAINER(window), vbox);
 
   g_signal_connect (btnLogin, "clicked", G_CALLBACK (btnLogin_click), NULL);
@@ -306,11 +310,11 @@ activate (GtkApplication* app, gpointer user_data){
 
 int
 main (int argc, char **argv){
-  
+
   int status;
   const gchar *home_dir = g_get_home_dir();
   gchar *app_dir = g_build_filename (home_dir, "projects", "app", NULL);
-  
+
   if (chdir (app_dir) != 0) {
     perror ("chdir() error");
     g_free (app_dir);
@@ -318,7 +322,7 @@ main (int argc, char **argv){
     g_print ("Change dir to: %s\n", app_dir);
   }
   g_free (app_dir);
-  
+
   app = gtk_application_new ("com.pimpanya", G_APPLICATION_FLAGS_NONE);
   g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
   status = g_application_run (G_APPLICATION (app), argc, argv);
