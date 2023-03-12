@@ -310,7 +310,6 @@ activate (GtkApplication* app, gpointer user_data){
 
 int
 main (int argc, char **argv){
-
   int status;
   const gchar *home_dir = g_get_home_dir();
   gchar *app_dir = g_build_filename (home_dir, "projects", "app", NULL);
