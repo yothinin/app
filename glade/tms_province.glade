@@ -129,6 +129,7 @@
             </child>
             <child>
               <object class="GtkBox" id="dataBox">
+                <property name="name">ชื่อจังหวัด</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="orientation">vertical</property>
@@ -193,10 +194,12 @@
                     </child>
                     <child>
                       <object class="GtkEntry" id="entPrvName">
+                        <property name="name">ชื่อจังหวัด</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="max-length">40</property>
                         <property name="width-chars">20</property>
+                        <property name="placeholder-text" translatable="yes">ชื่อจังหวัด</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>

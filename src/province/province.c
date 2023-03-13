@@ -54,7 +54,10 @@ do_province (GtkApplication *app, gpointer user_data){
   prvObj->btnExit = (GtkWidget*) gtk_builder_get_object (prvObj->builder, "btnExit");
   prvObj->btnNew = (GtkWidget*) gtk_builder_get_object (prvObj->builder, "btnNew");
   prvObj->treeStore = (GtkTreeStore*) gtk_builder_get_object (prvObj->builder, "treeStore");
-  
+
+  //gtk_entry_set_placeholder_text(GTK_ENTRY(prvObj->entPrvCode), "code");
+  //gtk_entry_set_placeholder_text(GTK_ENTRY(prvObj->entPrvName), "ชื่อจังหวัด");
+
   insertProvinceToListStore (prvObj);
   //insertProvinceToListStore (prvObj); // Insert data to GtkListStore at the first run.
 
